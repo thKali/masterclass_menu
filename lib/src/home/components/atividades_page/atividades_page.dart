@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:masterclass_menu/src/assets/db_icons.dart';
+import 'package:masterclass_menu/src/home/components/atividades_page/components/info_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AtividadesPage extends StatefulWidget {
-  const AtividadesPage({Key? key}) : super(key: key);
+  const AtividadesPage(
+      {Key? key, required this.appBarBuilder, required this.switchDarkMode})
+      : super(key: key);
+  final AppBar Function(
+    BuildContext context, {
+    required void Function() callback,
+    int? selectedIndex,
+    String? title,
+  }) appBarBuilder;
+
+  final void Function() switchDarkMode;
 
   @override
   State<AtividadesPage> createState() => _AtividadesPageState();
@@ -24,7 +34,8 @@ class _AtividadesPageState extends State<AtividadesPage> {
             quantidadeDeExercicios: 0,
             desc:
                 'Estuda sobre animações implicitas e controladas contendo quatro exercícios e dois estudos.',
-            urlFonte: '',
+            urlFonte: 'http://google.com',
+            items: [],
           ),
           buildCard(
             context,
@@ -32,35 +43,87 @@ class _AtividadesPageState extends State<AtividadesPage> {
             title: 'Playground',
             quantidadeDeExercicios: 0,
             desc: 'Ambiente destinado a testes e estudos em geral.',
-            urlFonte: '',
+            urlFonte: 'https://google.com',
+            items: [],
           ),
           buildCard(
             context,
             icon: DBIcons.glasses,
             title: 'Leitura de Mockup',
             quantidadeDeExercicios: 0,
-            desc: 'Aplicação da técnica de leitura de mockup, contendo 2 exercícios.',
-            urlFonte: '',
+            desc:
+                'Aplicação da técnica de leitura de mockup, contendo 2 exercícios.',
+            urlFonte: 'asuhduhasud',
+            items: [
+              '/tinder',
+              '/mockup',
+              '/animacao-implicita',
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget buildCard(BuildContext context,
-      {required String title,
-      required int quantidadeDeExercicios,
-      required String desc,
-      required String urlFonte, required IconData icon}) {
+  sendToNewPage(items) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => InfoPage(
+            callback: widget.appBarBuilder,
+            switchDarkMode: widget.switchDarkMode,
+            title: 'Leitura de Mockup',
+            items: items),
+      ),
+    );
+  }
+
+  Widget buildCard(
+    BuildContext context, {
+    required String title,
+    required int quantidadeDeExercicios,
+    required String desc,
+    required String urlFonte,
+    required IconData icon,
+    required List<String> items,
+  }) {
+    Future<void> _launchUrl(String _url) async {
+      try {
+        if (!await launchUrl(Uri.parse(_url),
+            mode: LaunchMode.externalApplication)) {
+          throw 'Could not launch $_url';
+        }
+      } catch (err) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Alerta'),
+            content:
+                const Text('O Link está quebrado, alerte o desenvolvedor!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Ok'),
+              )
+            ],
+          ),
+        );
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.28,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -70,7 +133,8 @@ class _AtividadesPageState extends State<AtividadesPage> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           child: Icon(
                             icon,
                             color: Theme.of(context).colorScheme.secondary,
@@ -93,7 +157,9 @@ class _AtividadesPageState extends State<AtividadesPage> {
                           style: Theme.of(context)
                               .textTheme
                               .headline1
-                              ?.copyWith(fontSize: 12, color: Colors.white),
+                              ?.copyWith(
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.surface),
                         ),
                       ],
                     ),
@@ -107,8 +173,7 @@ class _AtividadesPageState extends State<AtividadesPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        //TODO: launchurl
-                        print('launchUrl $urlFonte');
+                        _launchUrl(urlFonte);
                       },
                       child: Row(
                         children: [
@@ -137,7 +202,7 @@ class _AtividadesPageState extends State<AtividadesPage> {
                                 borderRadius: BorderRadius.circular(20)),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () => sendToNewPage(items),
                         child: Text(
                           'Ver mais',
                           style: Theme.of(context)

@@ -40,14 +40,28 @@ class _HomePageState extends State<HomePage> {
   );
 
   @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(
+        context,
+        logoVisibility: true,
+        selectedIndex: selectedIndex,
+        callback: widget.switchDarkMode,
+      ),
       body: PageView(
         controller: pageController,
         children: [
-          AtividadesPage(),
+          AtividadesPage(
+            switchDarkMode: widget.switchDarkMode,
+            appBarBuilder: buildAppBar,
+          ),
           Center(
             child: Text(
               'Nada aqui ainda...',
@@ -79,27 +93,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    var title = selectedIndex == 0
-        ? 'Atividades'
-        : selectedIndex == 1
-            ? 'Repositórios'
-            : 'Sobre o dev';
+  AppBar buildAppBar(BuildContext context,
+      {int? selectedIndex,
+      String? title,
+      bool? logoVisibility,
+      required void Function() callback}) {
+    String newTitle;
+
+    if (title == null && selectedIndex != null) {
+      newTitle = selectedIndex == 0
+          ? 'Atividades'
+          : selectedIndex == 1
+              ? 'Repositórios'
+              : 'Sobre o dev';
+    } else {
+      newTitle = title ?? 'Sem título';
+    }
 
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: Image.asset('assets/images/logo_masterclass.png'),
-          ),
-          SizedBox(width: 4),
+          if (logoVisibility ?? false)
+            CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset('assets/images/logo_masterclass.png'),
+            )
+          else
+            IconButton(
+              onPressed: () {
+                Navigator.canPop(context) ? Navigator.pop(context) : null;
+              },
+              icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.surface),
+            ),
+          SizedBox(width: logoVisibility ?? false ? 4 : 0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.headline1),
+              Text(newTitle, style: Theme.of(context).textTheme.headline1),
               Text(
                 'Flutterando Masterclass',
                 style: Theme.of(context).textTheme.bodyText1,
@@ -110,9 +143,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         IconButton(
-          onPressed: () {
-            widget.switchDarkMode();
-          },
+          onPressed: callback,
           icon: const Icon(DBIcons.moon),
           color: Theme.of(context).colorScheme.surface,
         ),

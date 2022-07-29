@@ -51,34 +51,38 @@ class _DevPageState extends State<DevPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(DBIcons.whatsapp),
-                        onPressed: () {
-                          
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(DBIcons.gitAlt),
-                        onPressed: () {
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: const Icon(DBIcons.whatsapp),
+                          onPressed: () {
+                            
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(DBIcons.gitAlt),
+                          onPressed: () {
 
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(DBIcons.instagram),
-                        onPressed: () {
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(DBIcons.instagram),
+                          onPressed: () {
+                            //TODO: redirecionar para as midias
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(DBIcons.facebook),
+                          onPressed: () {
 
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(DBIcons.facebook),
-                        onPressed: () {
-                          
-                        },
-                      ),
-                    ],
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

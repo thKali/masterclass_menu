@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:masterclass_menu/src/app_routes.dart';
+import 'package:masterclass_menu/src/exercicios/tinder/tinder_page.dart';
+import 'package:masterclass_menu/src/splash/splash_page.dart';
 
 import 'home/home_page.dart';
 
@@ -21,7 +24,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: isDarkMode ? themeDark : themeLight,
-      home: HomePage(switchDarkMode),
+      routes: {
+        AppRoutes.SPLASH: (context) => const SplashScreen(),
+        AppRoutes.HOME: (context) => HomePage(switchDarkMode),
+        AppRoutes.TINDER: (context) => const TinderPage(),
+      },
     );
   }
 
