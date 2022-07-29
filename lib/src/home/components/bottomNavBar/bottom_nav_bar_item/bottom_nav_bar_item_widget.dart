@@ -35,7 +35,7 @@ class _BottomNavBarItemWidgetState extends State<BottomNavBarItemWidget> {
             child: AnimatedContainer(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               duration: const Duration(milliseconds: 150),
-              color: Colors.blueGrey.withOpacity(widget.selected ? 0.15 : 0),
+              color: Theme.of(context).colorScheme.surface.withOpacity(widget.selected ? 0.15 : 0),
               child: Icon(widget.icon),
             ),
           ),

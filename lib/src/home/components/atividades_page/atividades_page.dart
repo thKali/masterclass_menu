@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:masterclass_menu/src/assets/db_icons.dart';
 import 'package:masterclass_menu/src/home/components/atividades_page/components/info_page.dart';
+import 'package:masterclass_menu/src/utils/url_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AtividadesPage extends StatefulWidget {
@@ -86,33 +87,6 @@ class _AtividadesPageState extends State<AtividadesPage> {
     required IconData icon,
     required List<String> items,
   }) {
-    Future<void> _launchUrl(String _url) async {
-      try {
-        if (!await launchUrl(Uri.parse(_url),
-            mode: LaunchMode.externalApplication)) {
-          throw 'Could not launch $_url';
-        }
-      } catch (err) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Alerta'),
-            content:
-                const Text('O Link está quebrado, alerte o desenvolvedor!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Ok'),
-              )
-            ],
-          ),
-        );
-      }
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -173,7 +147,7 @@ class _AtividadesPageState extends State<AtividadesPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        _launchUrl(urlFonte);
+                       UrlLauncher.launchTheUrl(context, urlFonte);
                       },
                       child: Row(
                         children: [

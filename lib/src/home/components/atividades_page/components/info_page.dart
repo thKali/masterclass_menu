@@ -33,8 +33,11 @@ class _InfoPageState extends State<InfoPage> {
           callback: widget.switchDarkMode, title: widget.title),
       body: widget.items.isEmpty
           ? Center(
-              child: Text('Ainda não há exercícios.',
-                  style: Theme.of(context).textTheme.headline1))
+              child: Text(
+                'Ainda não há exercícios.',
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            )
           : ListView(
               children: List.generate(widget.items.length,
                   (index) => buildRowExercicio(index, widget.items[index])),

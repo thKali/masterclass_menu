@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:masterclass_menu/src/assets/db_icons.dart';
+import 'package:masterclass_menu/src/utils/url_launcher.dart';
 
 class DevPage extends StatefulWidget {
   const DevPage({Key? key}) : super(key: key);
@@ -65,6 +66,7 @@ class _DevPageState extends State<DevPage> {
                         IconButton(
                           icon: const Icon(DBIcons.gitAlt),
                           onPressed: () {
+                            UrlLauncher.launchTheUrl(context, 'https://github.com/thKali');
 
                           },
                         ),
