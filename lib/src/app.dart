@@ -5,30 +5,26 @@ import 'package:masterclass_menu/src/splash/splash_page.dart';
 
 import 'home/home_page.dart';
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool isDarkMode = false;
-  switchDarkMode() {
-    isDarkMode = !isDarkMode;
-    setState(() {});
-  }
+class MyApp extends StatelessWidget {
+   MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: isDarkMode ? themeDark : themeLight,
-      routes: {
-        AppRoutes.SPLASH: (context) => const SplashScreen(),
-        AppRoutes.HOME: (context) => HomePage(switchDarkMode),
-        AppRoutes.TINDER: (context) => const TinderPage(),
-      },
+    return MyTheme(
+      child: Builder(builder: (context) {
+        final myTheme = MyTheme.of(context);
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: themeLight,
+          darkTheme: themeDark,
+          themeMode: myTheme.themeMode,
+          routes: {
+            AppRoutes.SPLASH: (context) => const SplashScreen(),
+            AppRoutes.HOME: (context) => const HomePage(),
+            AppRoutes.TINDER: (context) => const TinderPage(),
+          },
+        );
+      }),
     );
   }
 
@@ -76,8 +72,6 @@ const textThemeLight = TextTheme(
   ),
 );
 
-
-
 const textThemeDark = TextTheme(
   headline1: TextStyle(
     fontFamily: 'Poppins',
@@ -98,3 +92,20 @@ const textThemeDark = TextTheme(
     color: Color(0xff51565A),
   ),
 );
+
+class MyTheme extends InheritedNotifier<ValueNotifier<ThemeMode>> {
+  MyTheme({required super.child, super.key})
+      : super(notifier: ValueNotifier(ThemeMode.light));
+
+  static MyTheme of(BuildContext context) {
+    var myTheme = context.dependOnInheritedWidgetOfExactType<MyTheme>()!;
+    return myTheme;
+  }
+
+  ThemeMode get themeMode => notifier!.value;
+
+  switchDarkMode() {
+    notifier!.value =
+        notifier!.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+  }
+}

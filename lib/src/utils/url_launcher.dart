@@ -5,7 +5,7 @@ class UrlLauncher {
   static Future<void> launchTheUrl(BuildContext context, String _url) async {
       try {
         if (!await launchUrl(Uri.parse(_url),
-            mode: LaunchMode.externalApplication)) {
+            mode: LaunchMode.inAppWebView)) {
           throw 'Could not launch $_url';
         }
       } catch (err) {

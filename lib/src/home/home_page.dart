@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:masterclass_menu/src/app.dart';
 import 'package:masterclass_menu/src/assets/db_icons.dart';
 import 'package:masterclass_menu/src/home/components/atividades_page/atividades_page.dart';
 import 'package:masterclass_menu/src/home/components/bottomNavBar/bottom_nav_bar.dart';
@@ -9,10 +10,7 @@ import 'components/bottomNavBar/bottom_nav_bar_item/bottom_nav_bar_item_model.da
 import 'components/dev_page/dev_page.dart';
 
 class HomePage extends StatefulWidget {
-  final void Function() switchDarkMode;
-
-  const HomePage(
-    this.switchDarkMode, {
+  const HomePage({
     Key? key,
   }) : super(key: key);
 
@@ -45,21 +43,27 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void callChangeTheme() {
+    var myTheme = MyTheme.of(context);
+    myTheme.switchDarkMode();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //TODO: PROBLEMA AO ABRIR URL`S, STATUSBAR
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: buildAppBar(
         context,
         logoVisibility: true,
         selectedIndex: selectedIndex,
-        callback: widget.switchDarkMode,
+        callback: callChangeTheme,
       ),
       body: PageView(
         controller: pageController,
         children: [
           AtividadesPage(
-            switchDarkMode: widget.switchDarkMode,
+            switchDarkMode: callChangeTheme,
             appBarBuilder: buildAppBar,
           ),
           Center(
@@ -126,7 +130,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.canPop(context) ? Navigator.pop(context) : null;
               },
-              icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.surface),
+              icon: Icon(Icons.arrow_back_ios,
+                  color: Theme.of(context).colorScheme.surface),
             ),
           SizedBox(width: logoVisibility ?? false ? 4 : 0),
           Column(
